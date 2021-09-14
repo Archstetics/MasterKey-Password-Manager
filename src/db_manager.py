@@ -18,33 +18,29 @@ def insert_new_account(account, userid, passwd, site_url, connection):
     except (Exception, psycopg2.Error) as error:
         print(error)
 
-###############################################################################################
-###############################################################################################
-
 def get_password(account, connection):
     try:
         cursor = connection.cursor()
-        get_password_query = """SELECT passwd FROM uservault WHERE account = %s"""
+        get_password_query = """SELECT passwd FROM uservault WHERE account = '""" + account + "'"
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        print('Password is: ', record)
+        print('Password is: ')
+        print(record[0])
     except (Exception, psycopg2.Error) as error:
         print(error)
 
 def get_user_id(account, connection):
     try:
         cursor = connection.cursor()
-        get_password_query = """SELECT userid FROM uservault WHERE account = %s"""
+        get_password_query = """SELECT userid FROM uservault WHERE account = '""" + account + "'"
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        print('User ID is: ', record)
+        print('User ID is: ')
+        print(record[0])
     except (Exception, psycopg2.Error) as error:
         print(error)
-
-###############################################################################################
-###############################################################################################
 
 def reset_url(site_url, account, connection):
     try:

@@ -9,7 +9,7 @@ def main():
     connection = db_manager.connect_to_db()
     account = "Instagram"
     
-    db_manager.get_password(account, connection)
+    db_manager.get_user_id(account, connection)
     
     """
     account = input("Inserisci il nome del servizio (es. Facebook, Instagram): ")
