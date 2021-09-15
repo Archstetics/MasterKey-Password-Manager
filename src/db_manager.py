@@ -1,11 +1,5 @@
 import psycopg2
 
-###############################################################################################################
-# REMINDER:
-#
-# Aggiustare visualizzazione di print_table(), get_password() e get_user_id()
-###############################################################################################################
-
 def connect_to_db():
     try:
         # Set your PostgreSQL host, database, user and password between the quotes
