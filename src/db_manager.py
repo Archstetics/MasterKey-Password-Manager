@@ -1,7 +1,14 @@
 import psycopg2
 
+###############################################################################################################
+# REMINDER:
+#
+# Aggiustare visualizzazione di print_table(), get_password() e get_user_id()
+###############################################################################################################
+
 def connect_to_db():
     try:
+        # Set your PostgreSQL host, database, user and password between the quotes
         connection = psycopg2.connect(host="localhost", database="accounts", user="postgres", password="0306")
         return connection
     except (Exception, psycopg2.Error) as error:
@@ -18,6 +25,21 @@ def insert_new_account(account, userid, passwd, site_url, connection):
     except (Exception, psycopg2.Error) as error:
         print(error)
 
+def print_table(connection):
+    try:
+        cursor = connection.cursor()
+        insert_query = """SELECT * FROM uservault"""
+        cursor.execute(insert_query)
+        connection.commit()
+        record = cursor.fetchall()
+        for i in range(len(record)):
+            columns = record[i]
+            for j in range(len(columns)):
+                titles = ["Account: ","Username: ","Password: ","URL: "]
+                print(titles[j], columns[j])
+    except (Exception, psycopg2.Error) as error:
+        print(error)
+
 def get_password(account, connection):
     try:
         cursor = connection.cursor()
@@ -25,8 +47,7 @@ def get_password(account, connection):
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        print('Password is: ')
-        print(record[0])
+        print('Password is: ',record[0])
     except (Exception, psycopg2.Error) as error:
         print(error)
 
@@ -37,8 +58,7 @@ def get_user_id(account, connection):
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        print('User ID is: ')
-        print(record[0])
+        print('User ID is: ', record[0])
     except (Exception, psycopg2.Error) as error:
         print(error)
 
@@ -60,7 +80,18 @@ def reset_account(new_account, account, connection):
         records = (new_account, account)
         cursor.execute(insert_query, records)
         connection.commit()
-        print('Account utente modificato')
+        print("Il servizio dell'account è stato modificato")
+    except (Exception, psycopg2.Error) as error:
+        print(error)
+
+def reset_account(userid, account, connection):
+    try:
+        cursor = connection.cursor()
+        insert_query = """UPDATE uservault SET userid = %s WHERE account = %s"""
+        records = (userid, account)
+        cursor.execute(insert_query, records)
+        connection.commit()
+        print('Username modificato')
     except (Exception, psycopg2.Error) as error:
         print(error)
 
