@@ -15,7 +15,7 @@ def generate_password(lenght):
         password = ''.join(secrets.choice(alphabet) for i in range(lenght))
         if (any(c.islower() for c in password) and any(c.isupper() for c in password)):
             break
-    print(password)
+    return password
 
 def generate_password_digit(lenght):
     alphabet = string.ascii_letters + string.digits
@@ -23,7 +23,7 @@ def generate_password_digit(lenght):
         password = ''.join(secrets.choice(alphabet) for i in range(lenght))
         if (any(c.islower() for c in password) and any(c.isupper() for c in password) and sum(c.isdigit() for c in password) >= 2):
             break
-    print(password)
+    return password
 
 def generate_password_punct(lenght):
     alphabet = string.ascii_letters + string.punctuation
@@ -37,7 +37,7 @@ def generate_password_punct(lenght):
             password.pop(random.randrange(lenght))
             password.insert(random.randrange(lenght), random.choice(string.punctuation))
             password = ''.join(password)
-    print(password)
+    return password
 
 def generate_password_digit_punct(lenght):
     alphabet = string.ascii_letters + string.digits + string.punctuation
@@ -51,4 +51,4 @@ def generate_password_digit_punct(lenght):
             password.pop(random.randrange(lenght))
             password.insert(random.randrange(lenght), random.choice(string.punctuation))
             password = ''.join(password)
-    print(password) 
+    return password

@@ -26,11 +26,13 @@ def print_table(connection):
         cursor.execute(insert_query)
         connection.commit()
         record = cursor.fetchall()
+        print("-----------------------------------------------------")
         for i in range(len(record)):
             columns = record[i]
             for j in range(len(columns)):
                 titles = ["Account: ","Username: ","Password: ","URL: "]
                 print(titles[j], columns[j])
+            print("-----------------------------------------------------")
     except (Exception, psycopg2.Error) as error:
         print(error)
 
@@ -78,11 +80,11 @@ def reset_account(new_account, account, connection):
     except (Exception, psycopg2.Error) as error:
         print(error)
 
-def reset_account(userid, account, connection):
+def reset_user_id(new_user_id, account, connection):
     try:
         cursor = connection.cursor()
         insert_query = """UPDATE uservault SET userid = %s WHERE account = %s"""
-        records = (userid, account)
+        records = (new_user_id, account)
         cursor.execute(insert_query, records)
         connection.commit()
         print('Username modificato')
