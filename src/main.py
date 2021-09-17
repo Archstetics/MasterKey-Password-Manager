@@ -3,29 +3,30 @@ import password_crypt_hash
 import password_generator
 import getpass
 import sys
-from os import system
+import psycopg2
+import os
 from PyInquirer import prompt
 
 
 def master_password_init(questions):
+    os.system('clear')
     answer = prompt(questions[0])
 
-    if answer['pass'] == 'yes':
-        return 0   
-    else:
+    if answer['pass'] == 'no':
+        os.system('clear')
         answer = prompt(questions[1])
 
         if answer['generate'] == 'I choose it':
-            new_master_password_input = getpass.getpass("Enter your new master password: ")
+            new_master_password_input = getpass.getpass('Enter your new master password: ')
             hashed_password = password_crypt_hash.hash_master_password(new_master_password_input)
-            print("Your new master password is: ", new_master_password_input)
+            print('Your new master password is: ', new_master_password_input)
             print("Your hashed master password is: ", hashed_password)
             print("Enter your hashed master password in password_crypt_hash.py and run the program again.")
             sys.exit()
 
         elif answer['generate'] == 'generate it automatically':
             lenght = int(input("Enter the password length: "))
-            password = password_crypt_hash.generate_password_digit_punct(lenght)
+            password = password_generator.generate_password_digit_punct(lenght)
             hashed_password = password_crypt_hash.hash_master_password(password)
             print("Your new master password is: ", password)
             print("Your hashed master password is: ", hashed_password)
@@ -35,10 +36,19 @@ def master_password_init(questions):
 def login():
     master_password_input = getpass.getpass("Login with your master password: ")
     if password_crypt_hash.check_master_password(master_password_input, password_crypt_hash.master_password_hashed) == True:
-        connection = db_manager.connect_to_db()
-        print("Sucessfully Authenticated.")
-        return connection
+        try:
+            connection = db_manager.connect_to_db()
+            os.system('clear')
+            print('\n', '-----------------------------------------------------', '\n')
+            print(" Sucessfully Authenticated.")
+            print('\n', '-----------------------------------------------------', '\n')
+            return connection
+        except (Exception, psycopg2.Error) as error:
+            os.system('clear')
+            print(error)
+            sys.exit()
     else:
+        os.system('clear')
         print("Authentication failed. Try to run the program again.")
         sys.exit()
 
@@ -122,10 +132,12 @@ def main():
 
         if answer['menu'] == 'Search password by selecting the service account.':
             account = input('Account name: ')
+            os.system('clear')
             db_manager.get_password(account, connection)
 
         if answer['menu'] == 'Search username by selecting the service account.':
             account = input('Account name: ')
+            os.system('clear')
             db_manager.get_user_id(account, connection)
 
         if answer['menu'] == 'Reset service account name.':
