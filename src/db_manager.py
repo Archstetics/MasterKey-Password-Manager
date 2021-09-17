@@ -1,4 +1,5 @@
 import psycopg2
+import password_crypt_hash
 
 def connect_to_db():
     try:
@@ -43,7 +44,8 @@ def get_password(account, connection):
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        print('Password is: ',record[0])
+        password = password_crypt_hash.decrypt_password(record[0].encode('utf-8'), password_crypt_hash.master_password_hashed)
+        print('Password is: ', password)
     except (Exception, psycopg2.Error) as error:
         print(error)
 
