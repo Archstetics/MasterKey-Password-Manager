@@ -3,7 +3,8 @@ from base64 import b64encode, b64decode
 from Cryptodome.Cipher import AES
 from Cryptodome.Protocol.KDF import PBKDF2
 
-master_password_hashed = '$2a$12$U3ClBLe7P0nWrzri2/R10O7FBUfKBxobITq4JSudOKME.ahJy45HG'
+# Enter your Hashed Master Password here.
+master_password_hashed = '***************************'
 
 def hash_master_password(password):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
@@ -13,7 +14,8 @@ def check_master_password(input_master_password, master_password_hashed):
     return bcrypt.checkpw(input_master_password.encode(), master_password_hashed.encode())
 
 def get_private_key(master_password_hashed):
-    salt = 'insert_your_salt_here'
+    # Enter your Salt here.
+    salt = '***********'
     kdf = PBKDF2(master_password_hashed, salt, 64, 1000)
     key = kdf[:32]
     return key

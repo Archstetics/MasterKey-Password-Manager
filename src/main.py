@@ -59,18 +59,20 @@ def master_password_init(questions):
         if answer['generate'] == 'I choose it':
             new_master_password_input = getpass.getpass('Enter your new master password: ')
             hashed_password = password_crypt_hash.hash_master_password(new_master_password_input)
+            clipboard.copy(hashed_password)
             print('Your new master password is: ', new_master_password_input)
-            print("Your hashed master password is: ", hashed_password)
-            print("Enter your hashed master password in password_crypt_hash.py and remember the master password. Then run the program again.")
+            print('Your hashed master password is: ', hashed_password)
+            print('The hashed master password has been copied to the clipboard. Enter it in password_crypt_hash.py and remember the master password.')
             sys.exit()
 
         elif answer['generate'] == 'generate it automatically':
             lenght = int(input("Enter the password length: "))
             password = password_generator.generate_password_digit_punct(lenght)
             hashed_password = password_crypt_hash.hash_master_password(password)
-            print("Your new master password is: ", password)
-            print("Your hashed master password is: ", hashed_password)
-            print("Enter your hashed master password in password_crypt_hash.py and run the program again.")
+            clipboard.copy(hashed_password)
+            print('Your new master password is: ', password)
+            print('Your hashed master password is: ', hashed_password)
+            print('The hashed master password has been copied to the clipboard. Enter it in password_crypt_hash.py and remember the master password.')
             sys.exit()
 
 def login():
@@ -80,7 +82,7 @@ def login():
             connection = db_manager.connect_to_db()
             os.system('clear')
             print('\n', '-----------------------------------------------------', '\n')
-            print(" Sucessfully Authenticated.")
+            print(' Sucessfully Authenticated.')
             print('\n', '-----------------------------------------------------', '\n')
             return connection
         except (Exception, psycopg2.Error) as error:
@@ -114,7 +116,7 @@ def main(questions):
 
         if answer['menu'] == 'Generate a secure password.':
             password_generator_answer = prompt(questions[3])
-            lenght = int(input("Enter the number of characters: "))
+            lenght = int(input('Enter the number of characters: '))
             if password_generator_answer['password'] == 'Characters only.':
                 password = password_generator.generate_password(lenght)
 

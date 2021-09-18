@@ -3,7 +3,8 @@ import password_crypt_hash
 import clipboard
 
 def connect_to_db():
-    connection = psycopg2.connect(host="localhost", database="accounts", user="postgres", password="0306")
+    # Enter host, database, user and password 
+    connection = psycopg2.connect(host="********", database="********", user="********", password="********")
     return connection
 
 def insert_new_account(account, userid, passwd, site_url, connection):
