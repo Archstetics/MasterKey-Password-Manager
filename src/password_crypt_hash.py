@@ -1,7 +1,5 @@
 import bcrypt
 from base64 import b64encode, b64decode
-import hashlib
-from Cryptodome import Random
 from Cryptodome.Cipher import AES
 from Cryptodome.Protocol.KDF import PBKDF2
 
@@ -9,7 +7,7 @@ master_password_hashed = '$2a$12$U3ClBLe7P0nWrzri2/R10O7FBUfKBxobITq4JSudOKME.ah
 
 def hash_master_password(password):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    return hashed_password
+    return hashed_password.decode()
 
 def check_master_password(input_master_password, master_password_hashed):
     return bcrypt.checkpw(input_master_password.encode(), master_password_hashed.encode())
@@ -22,14 +20,11 @@ def get_private_key(master_password_hashed):
 
 def encrypt_password(password_to_encrypt, master_password_hashed):
     key = get_private_key(master_password_hashed)
-    data_convert = str.encode(password_to_encrypt)
+    password_to_encrypt = str.encode(password_to_encrypt)
     cipher = AES.new(key, AES.MODE_EAX)
-    nonce = cipher.nonce
-    ciphertext, tag = cipher.encrypt_and_digest(data_convert) 
-    add_nonce = ciphertext + nonce
-    encoded_ciphertext = b64encode(add_nonce).decode()
-    return encoded_ciphertext
-
+    cipher_password, tag = cipher.encrypt_and_digest(password_to_encrypt)
+    encrypted_password = b64encode(cipher_password + cipher.nonce).decode()
+    return encrypted_password
 
 def decrypt_password(encrypted_password, master_password_hashed):
     key = get_private_key(master_password_hashed)
@@ -39,4 +34,3 @@ def decrypt_password(encrypted_password, master_password_hashed):
     cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
     password = cipher.decrypt(b64decode(encrypted_password)[:-16])
     return password
-

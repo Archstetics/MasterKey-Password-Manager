@@ -1,5 +1,6 @@
 import psycopg2
 import password_crypt_hash
+import clipboard
 
 def connect_to_db():
     connection = psycopg2.connect(host="localhost", database="accounts", user="postgres", password="0306")
@@ -22,45 +23,33 @@ def insert_new_account(account, userid, passwd, site_url, connection):
 def print_table(connection):
     try:
         cursor = connection.cursor()
-        insert_query = """SELECT * FROM uservault"""
-        cursor.execute(insert_query)
+        selection_query = """SELECT account, userid, site_url FROM uservault"""
+        cursor.execute(selection_query)
         connection.commit()
         record = cursor.fetchall()
         print('\n', '-----------------------------------------------------', '\n')
         for i in range(len(record)):
             columns = record[i]
             for j in range(len(columns)):
-                titles = ['Account: ','Username: ','Password: ','URL: ']
+                titles = [' Account:',' Username:',' URL:']
                 print(titles[j], columns[j])
-                print('\n', '-----------------------------------------------------', '\n')
-
-
+            print('\n', '-----------------------------------------------------', '\n')
     except (Exception, psycopg2.Error) as error:
         print(error)
 
-def get_password(account, connection):
+def get_user_id_password(account, connection):
     try:
         cursor = connection.cursor()
-        get_password_query = """SELECT passwd FROM uservault WHERE account = '""" + account + "'"
+        get_password_query = """SELECT userid, passwd FROM uservault WHERE account = '""" + account + "'"
         cursor.execute(get_password_query, account)
         connection.commit()
         record = cursor.fetchone()
-        password = password_crypt_hash.decrypt_password(record[0].encode('utf-8'), password_crypt_hash.master_password_hashed)
+        password = password_crypt_hash.decrypt_password(record[1].encode('utf-8'), password_crypt_hash.master_password_hashed)
+        clipboard.copy(password.decode())
         print('\n', '-----------------------------------------------------', '\n')
-        print(' Password is: ', password.decode())
-        print('\n', '-----------------------------------------------------', '\n')
-    except (Exception, psycopg2.Error) as error:
-        print(error)
-
-def get_user_id(account, connection):
-    try:
-        cursor = connection.cursor()
-        get_password_query = """SELECT userid FROM uservault WHERE account = '""" + account + "'"
-        cursor.execute(get_password_query, account)
-        connection.commit()
-        record = cursor.fetchone()
-        print('\n', '-----------------------------------------------------', '\n')
-        print(' User ID is: ', record[0])
+        print(' Your username is:', record[0])
+        print(' Your password is:', password.decode())
+        print(' The password has been copied to the clipboard.')
         print('\n', '-----------------------------------------------------', '\n')
     except (Exception, psycopg2.Error) as error:
         print(error)
@@ -113,6 +102,18 @@ def reset_password(passwd, account, connection):
         connection.commit()
         print('\n', '-----------------------------------------------------', '\n')
         print(' Password modified.')
+        print('\n', '-----------------------------------------------------', '\n')
+    except (Exception, psycopg2.Error) as error:
+        print(error)
+
+def delete_account(account, connection):
+    try:
+        cursor = connection.cursor()
+        deletion_query = """DELETE FROM uservault WHERE account = '""" + account + "'"
+        cursor.execute(deletion_query, account)
+        connection.commit()
+        print('\n', '-----------------------------------------------------', '\n')
+        print(' Account', account, 'has been deleted.')
         print('\n', '-----------------------------------------------------', '\n')
     except (Exception, psycopg2.Error) as error:
         print(error)

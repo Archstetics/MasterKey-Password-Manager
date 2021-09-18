@@ -2,13 +2,6 @@ import string
 import random
 import secrets
 
-###############################################################################################################
-# REMINDER:
-#
-# Aggiustare punctuation (usa solo !@#$%^&*)
-# Cercare di utilizzare solo libreria secrets
-###############################################################################################################
-
 def generate_password(lenght):
     alphabet = string.ascii_letters
     while True:
@@ -31,7 +24,6 @@ def generate_password_punct(lenght):
         password = ''.join(secrets.choice(alphabet) for i in range(lenght))
         if (any(c.islower() for c in password)):
             break
-
         if not any(string.punctuation) in list(password):
             password = list(password)
             password.pop(random.randrange(lenght))
@@ -45,7 +37,6 @@ def generate_password_digit_punct(lenght):
         password = ''.join(secrets.choice(alphabet) for i in range(lenght))
         if (any(c.islower() for c in password) and any(c.isupper() for c in password) and sum(c.isdigit() for c in password) >= 2):
             break
-
         if not any(string.punctuation) in list(password):
             password = list(password)
             password.pop(random.randrange(lenght))
