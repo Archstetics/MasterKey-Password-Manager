@@ -6,7 +6,6 @@ def connect_to_db():
     connection = psycopg2.connect(host="localhost", database="accounts", user="postgres", password="0306")
     return connection
 
-
 def insert_new_account(account, userid, passwd, site_url, connection):
     try:
         cursor = connection.cursor()
